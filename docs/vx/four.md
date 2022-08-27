@@ -1,10 +1,11 @@
 # 硅谷云音乐
+[[toc]]
 
-## 列表视频 多个视频同时播放的问题
+## 第一节、列表视频 多个视频同时播放的问题
 - 当前保存一个 video 实例，每次播放的时候将上一个实例 停止，同时更换点击的实例，将当前点击的实例进行播放
 - 如何保证只有一个视频在播放  (利用单例模式)
 - 首先保证只有一个执行上下文对象(创建的视频实例),存到我们的this上
-### 播放流程
+### 1、播放流程
 - 判断this身上是否存在上下文对象, 如果不存在 就代表第一次播放
   -  创建上下文对象
   -  播放开始
@@ -55,7 +56,7 @@ data: {
   },
 </script>
 ```
-## 图片做优化
+## 第二节、图片做优化
 - poster属性 封面
 - 图片和视频切换  保证了当前只能有一个视频展示
 ```html
@@ -91,7 +92,7 @@ data: {
 </style>
 ```
 
-## 内网演示
+## 第三节、内网演示
 - 优化地址配置
 ```js
 export default {
@@ -106,7 +107,7 @@ wx.request({
 }
 ```
 
-## 保存当前播放时间， 切换回来的时候 变成继续播放
+## 第四节、保存当前播放时间， 切换回来的时候 变成继续播放
 - `VideoContext.seek`
 ```js
 // 添加历史 播放记录
@@ -119,7 +120,7 @@ addHistoryRecord(){
 }
 ```
 
-## 播放完成删除历史记录
+## 第五节、播放完成删除历史记录
 - vedio 事件`bindended`
 ```js
 <video
@@ -137,7 +138,7 @@ handlerEnd(event){
 </script>
 ```
 
-## 上拉触底 下拉刷新
+## 第六节、上拉触底 下拉刷新
 - 下拉刷新 需要配置 `scroll-view` 的 `refresher-enabled` 为 `true` 和下拉刷新标识 `refresher-triggered` 为`false`
   - 当用户下拉刷新的时候，需要重新发请求获取列表数据 绑定事件`bindrefresherrefresh`
   - 用户下拉刷新的时候, 会出现标识(三个点), 当数据请求回来了, 需要取消标识(去掉三个点) 
@@ -191,7 +192,7 @@ async getVideoList(){
 </script>
 ```
 
-## 自定义原生分享和自定义分析
+## 第七节、自定义原生分享和自定义分析
 - 自定义按钮转发 `button`身上 `open-type = 'share'`
 - 自带菜单转发
 - 无论是按钮转发还是菜单转发 最终都会触发`onShareAppMessage`
@@ -284,7 +285,7 @@ onShareAppMessage({from}) {
 }
 </script>
 ```
-### 禁止分享
+### 1、禁止分享
 - 1、`wx.hideShareMenu`
 - 2、删除`onShareAppMessage`
 ```js
@@ -294,4 +295,287 @@ onShareAppMessage({from}) {
       menus:['shareAppMessage']
     })
   },
+```
+## 第八节、今日推荐页面布局
+- 
+```html
+<style>
+/* pages/recommend/recommend.wxss */
+.recommendContainer{
+
+}
+.recommendContainer .header{
+  height: 300rpx;
+  position: relative;
+}
+.recommendContainer .header .headerImg{
+  width: 100%;
+  height: 300rpx;
+}
+.recommendContainer .header .headerText{
+  width: 200rpx;
+  height: 100rpx;
+  /* border: 1px solid red; */
+  position: absolute;
+  /* left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto; */
+  /* left: 50%;
+  top: 50%;
+  margin-top: -50rpx;
+  margin-left: -100rpx; */
+
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  text-align: center;
+  line-height: 100rpx;
+  font-size: 40rpx;
+  color: #fff;
+}
+.recommendContainer .main{
+  position: relative;
+  z-index: 1;
+  padding: 20rpx;
+  margin-top: -20rpx;
+  border-radius: 30rpx;
+  background-color:#fff;
+}
+.recommendContainer .main .header{
+  height: 42rpx;
+}
+.recommendContainer .main .header .headerRight{
+  float: right;
+}
+.recommendContainer .main .songScroll{
+  height: calc(100vh - 342rpx);
+}
+.recommendContainer .main .songScroll .item{
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.recommendContainer .main .songScroll .item .itemImg{
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 10prx;
+}
+.recommendContainer .main .songScroll .item .author{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-left: 20rpx;
+}
+</style>
+<!--pages/recommend/recommend.wxml-->
+<view class="recommendContainer">
+  <view class="header">
+    <image
+      class="headerImg"
+      src="../../static/images/recommendSong/recommendSong.jpg"></image>
+    <text class="headerText">22/6</text>
+  </view>
+  <view class="main">
+    <view class="header">
+      <text class="headerLeft">播放全部</text>
+      <text class="headerRight">全选</text>
+    </view>
+    <scroll-view class="songScroll" enable-flex scroll-y>
+      <view class="item">
+        <image class="itemImg" src="../../static/images/mylove.jpg"></image>
+        <view class="author">
+          <text class="songName">最美的期待</text>
+          <text class="authorName">周笔畅</text>
+        </view>
+        <view class="iconfont icon-gengduo"></view>
+      </view>
+      <view class="item">
+        <image class="itemImg" src="../../static/images/mylove.jpg"></image>
+        <view class="author">
+          <text class="songName">最美的期待</text>
+          <text class="authorName">周笔畅</text>
+        </view>
+        <view class="iconfont icon-gengduo"></view>
+      </view>
+      <view class="item">
+        <image class="itemImg" src="../../static/images/mylove.jpg"></image>
+        <view class="author">
+          <text class="songName">最美的期待</text>
+          <text class="authorName">周笔畅</text>
+        </view>
+        <view class="iconfont icon-gengduo"></view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+```
+## 第九节、日期动态数据
+- `/recommend/songs`
+```html
+<scroll-view class="songScroll" enable-flex scroll-y>
+  <view class="item" wx:for="{{recommendList}}" wx:key="id">
+    <image class="itemImg" src="{{item.album.picUrl}}"></image>
+    <view class="author">
+      <text class="songName">{{item.name}}</text>
+      <text class="authorName">{{item.artists[0].name}}</text>
+    </view>
+    <view class="iconfont icon-gengduo"></view>
+  </view>
+</scroll-view>
+<script>
+import request from '../../utils/request'
+// pages/recommend/recommend.js
+Page({
+  /**
+   * 页面的初始数据
+   */
+  data: {
+    day:'',
+    month:'',
+    recommendList: [],
+  },
+  async getReconmendList(){
+    const result = await request('/recommend/songs')
+    if(result.code === 200){
+      console.log(result)
+      this.setData({
+        recommendList:result.recommend
+      })
+    }
+  },
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad(options) {
+    let date = new Date()
+    let day = date.getDate()
+    let month = date.getMonth() + 1
+    this.setData({
+      day,
+      month
+    })
+    this.getReconmendList();
+  }
+})
+</script>
+```
+## 第十节、播放歌曲
+
+```html
+<style>
+  page{
+  height: 100%;
+}
+.detailContainer{
+  height: 100%;
+  width: 100%;
+  background-color: #8C8C8C;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.detailContainer .songName{
+  color: #fff;
+}
+.detailContainer .songBar{
+  width: 300rpx;
+  height: 300rpx;
+  /* border: 1px solid red; */
+  position: relative;
+  z-index: 1;
+}
+.detailContainer .songBar .needle{
+  width: 220rpx;
+  height: 240rpx;
+  position: absolute;
+  top: 54rpx;
+  left: 116rpx;
+  transform-origin:  32rpx 0rpx;
+  transform: rotate(-30deg);
+}
+
+.detailContainer .songBar .circle{
+  width: 60rpx;
+  height: 60rpx;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 20rpx;
+  left: 130rpx;
+}
+
+.detailContainer .songDisc{
+  margin-top: -160rpx;
+  width: 600rpx;
+  height: 600rpx;
+  position: relative;
+}
+.detailContainer .songDisc .disc{
+  width: 600rpx;
+  height: 600rpx;
+}
+.detailContainer .songDisc .songImg{
+  width: 400rpx;
+  height: 400rpx;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  margin: auto;
+  border-radius: 50%;
+}
+
+
+/* 底部控制区域 */
+.musicControl {
+  position: absolute;
+  bottom: 40rpx;
+  left: 0;
+  border-top: 1rpx solid #fff;
+  width: 100%;
+  display: flex;
+
+}
+
+.musicControl  text {
+  width: 20%;
+  height: 120rpx;
+  line-height: 120rpx;
+  text-align: center;
+  color: #fff;
+  font-size: 50rpx;
+}
+
+.musicControl  text.big{
+  font-size: 80rpx;
+}
+</style>
+<!--pages/detail/detail.wxml-->
+<view class="detailContainer">
+  <view class="songName">最美的期待</view>
+  <view class="songBar">
+    <image class="needle" src="../../static/images/song/needle.png"></image>
+    <view class="circle"></view>
+  </view>
+  <view class="songDisc">
+    <image class="disc" src="../../static/images/song/disc.png"></image>
+    <image class="songImg" src='../../static/images/mylove.jpg'></image>
+  </view>
+
+  <!-- 底部控制播放区域 -->
+  <view class="musicControl">
+    <text class="iconfont icon-iconsMusicyemianbofangmoshiShuffle"></text>
+
+    <text class="iconfont icon-shangyishou" id="prev" bindtap="handleSwitch"></text>
+
+    <text class="iconfont {{isPlay?'icon-zanting': 'icon-bofang'}} big" bindtap="handleMusicPlay"></text>
+
+    <text class="iconfont icon-next" id="next" bindtap="handleSwitch"></text>
+
+    <text class="iconfont icon-iconsMusicyemianbofangmoshiPlayList"></text>
+  </view>
+</view>
 ```

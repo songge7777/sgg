@@ -178,6 +178,37 @@ timeoutId = setTimeout(() =>{
 ## 1、数据绑定和更新
 - [数据绑定](https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxml/)
 ```html
+<View bindtap="layoutHandlerFn"  data-id="panrent">
+  数据绑定：{{msg}}
+  <view bindtap="handlerFn" data-id="child">按钮触发</view>
+  <!-- <view catchtap="handlerFn">按钮触发</view> -->
+</View>
+<script>
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+    msg:'测试数据'
+  },
+
+  layoutHandlerFn(event){
+    console.log('父组件触发了',event)
+  },
+
+  handlerFn(event){
+    console.log('儿子组件触发按钮事件',event)
+    const value = event.currentTarget.dataset.id
+    this.setData({
+      msg: value
+    })
+  }
+ 
+})
+</script>
+```
+```html
 <!--pages/index/index.wxml-->
 <view class="container">
   <image class="img" src="{{imgSrc}}" ></image>
