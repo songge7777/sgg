@@ -4,10 +4,15 @@ module.exports = {
   themeConfig: {
     editLinkText: "编辑此页",
     lastUpdated: "上次更新",
-    nav: [{
-      text: "vx",
-      link: "/vx/"
-    }
+    nav: [
+      {
+        text: "vx",
+        link: "/vx/"
+      },
+      {
+        text: "uniapp",
+        link: "/uniapp/"
+      }
     ],
     sidebar: {
       "/vx/": [
@@ -74,6 +79,30 @@ module.exports = {
           "nine",
         ]
       },
+    ],
+    
+    "/uniapp/": [
+      {
+        title: '第一天课',
+        collapsable: false,
+        children: [
+          "one",
+        ]
+      },
+      {
+        title: '第二天课',
+        collapsable: false,
+        children: [
+          "two",
+        ]
+      },
+      {
+        title: '第三天课',
+        collapsable: false,
+        children: [
+          "three",
+        ]
+      }
     ]
     }
   }

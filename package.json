@@ -17,7 +17,9 @@
     "doc": "docs",
     "test": "test"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chalk": "^5.0.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xiaoqi7777/b.git"

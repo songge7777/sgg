@@ -579,3 +579,67 @@ Page({
   </view>
 </view>
 ```
+## 第十一节、点击播放和暂停按钮，实现布局的动画
+```html
+<view class="songBar">
+  <image class="needle {{isPlay&&'active'}}" src="../../static/images/song/needle.png"></image>
+  <view class="circle"></view>
+</view>
+<view class="songDisc {{isPlay&&'songDiscActive'}}">
+  <image class="disc" src="../../static/images/song/disc.png"></image>
+  <image class="songImg" src='../../static/images/mylove.jpg'></image>
+</view>
+<text class="iconfont {{isPlay?'icon-zanting': 'icon-bofang'}} big" bindtap="handleMusicPlay"></text>
+
+<script>
+data: {
+  msg:'',
+  isPlay: false,
+}
+
+// 点击播放或者暂停按钮，切换播放状态
+handleMusicPlay(){
+  let isPlay = this.data.isPlay;
+  this.setData({
+    isPlay: !isPlay
+  })
+}
+</script>
+
+
+<style>
+  
+.detailContainer .songBar .needle{
+  width: 220rpx;
+  height: 240rpx;
+  position: absolute;
+  top: 54rpx;
+  left: 116rpx;
+  transform-origin:  32rpx 0rpx;
+  transform: rotate(-30deg);
+  transition: all 1s;
+}
+.detailContainer .songBar .active{
+  transform: rotate(0);
+}
+
+.detailContainer .songDisc{
+  margin-top: -160rpx;
+  width: 600rpx;
+  height: 600rpx;
+  position: relative;
+}
+.detailContainer .songDiscActive{
+  animation: move 4s linear  infinite;
+}
+@keyframes move{
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+</style>
+```

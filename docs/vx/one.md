@@ -3,7 +3,7 @@
 
 ## 一、准备工作
 
-## 1、小程序闲谈
+### 1、小程序闲谈
 - 1、微信小程序，简称小程序，英文名`Mini Program`，是一种不需要下载安装即可使用的应用 
 - 2、小程序刚发布的时候要求压缩包的体积不能大于1M,，否则无法通过，在2017年4月做了改进，由原来的1M提升到2M;
 - 3、2017年1月9日0点，万众瞩目的微信第一批小程序正式低调上线。
@@ -11,21 +11,11 @@
 - 5、通过扫一扫或者在微信搜索即可下载
 - 6、用户使用频率不高，但又不得不用的功能软件，目前看来小程序是首选
 - 7、开发门槛低， 成本低
-## 2、小程序相关资料
-- [官方文档](https://developers.weixin.qq.com/miniprogram/dev/framework/)
-- [编辑器](https://developers.weixin.qq.com/miniprogram/dev/devtools/stable.html)
-- [小程序注册](https://mp.weixin.qq.com/wxopen/waregister?action=step1&token=&lang=zh_CN)
-
-- 资料包(开发工具IDE,代码等)
-- 注册小程序账号
-
-<img :src="$withBase('/img/vxlogin.png')" >
-<img :src="$withBase('/img/vxlogin1.png')" >
 
 ## 二、储备知识
 ## 1、flex 布局
 - Flex是Flexible Box的缩写，意为”弹性布局”，用来为盒状模型提供最大的灵活性
-- [Flex学习文档](http://www.runoob.com/w3cnote/flex-grammar.html)
+- [Flex学习文档](https://www.ruanyifeng.com/blog/2015/07/flex-grammar.html)
 - 容器的属性
 ```md
 	-	`flex-direction` 属性决定主轴的方向（即项目的排列方向）。
@@ -128,8 +118,7 @@ timeoutId = setTimeout(() =>{
 	remRefresh()
 	}, 300)
 })
-```
-```js
+
 {
   test: /\.css$/,
   use: [
@@ -145,14 +134,129 @@ timeoutId = setTimeout(() =>{
   ]
 }
 ```
+### 移动端自适应
+- `npm install -S webpack@5.74.0 webpack-cli@4.10.0 css-loader@6.7.1 px2rem-loader@0.1.9 style-loader@3.3.1 html-webpack-plugin@5.5.0`
+- `style-loader`的作用是把 CSS 插入到 DOM 中，就是处理css-loader导出的模块数组，然后将样式通过style标签或者其他形式插入到DOM中
+- `css-loader` 会对 @import 和 url() 进行处理，就像 js 解析 import/require() 一样
+- `px2rem-loader` 把css 里面的 `px`值转换成 `rem`
+```js
+// webpack.config.js
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+module.exports = {
+    mode:'development',
+    entry:'./src/index.js',
+    output:{
+        filename:'main.js',
+        path: path.resolve(__dirname,'dist')
+    },
+    module: {
+        rules: [{
+          test: /\.css$/,
+          use: [{
+            loader: 'style-loader'
+          }, {
+            loader: 'css-loader'
+          }, {
+            loader: 'px2rem-loader',
+            options: {
+              remUni: 75,// rem的单位
+              remPrecision: 8// 计算后的rem小数点保留精度位数
+            }
+          }]
+        }]
+      },
+    plugins:[
+        new HtmlWebpackPlugin({
+            template:'./public/index.html',
+        })
+    ]
+}
+
+// src/index.js
+import './index.css';
+
+function remRefresh() {
+	let clientWidth = document.documentElement.clientWidth;
+	// 将屏幕等分10份
+	let rem = clientWidth / 10;
+	document.documentElement.style.fontSize = rem + 'px';
+	document.body.style.fontSize = '12px';
+}
+
+window.addEventListener('pageshow', () => {
+	remRefresh()
+})
+// 函数防抖
+let timeoutId;
+window.addEventListener('resize', () => {
+timeoutId && clearTimeout(timeoutId);
+timeoutId = setTimeout(() =>{
+	remRefresh()
+	}, 300)
+})
+
+// src/index.css
+*{
+    margin: 0;
+    padding: 0;
+}
+#main{
+    display: flex;
+    flex-wrap: wrap;
+}
+.div1{
+    flex-shrink: 0;
+    width: 100px;
+    height: 150px;
+    border: 1px solid red;
+    box-sizing: border-box;
+    margin-right: 25px;
+}
+
+// public/index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width,initial-scale=1.0,maximun-scale=1.0,user-scalable=no'>
+    <title>Document</title>
+</head>
+<body>
+    <div id="main">
+        <div class="div1"></div>
+        <div class="div1"></div>
+        <div class="div1"></div>
+        <div class="div1"></div>
+        <div class="div1"></div>
+        <div class="div1"></div>
+    </div>
+    <div>
+        测试字体大小
+    </div>
+</body>
+</html>
+```
 ## 三、创建新项目及开发工具介绍
-##	1、创建新项目
+## 1、小程序相关资料
+- [官方文档](https://developers.weixin.qq.com/miniprogram/dev/framework/)
+- [编辑器](https://developers.weixin.qq.com/miniprogram/dev/devtools/stable.html)
+- [小程序注册](https://mp.weixin.qq.com/wxopen/waregister?action=step1&token=&lang=zh_CN)
+
+- 资料包(开发工具IDE,代码等)
+- 注册小程序账号
+
+<img :src="$withBase('/img/vxlogin.png')" >
+<img :src="$withBase('/img/vxlogin1.png')" >
+
+##	2、创建新项目
   - 打开开发工具创建项目
 	-	新建项目
 	-	AppID 必须是自己的 -----> 微信公众平台-小程序-设置(左边tab)-基础设置-帐号信息
 	-	不使用云服务
 
-##	2、开发工具介绍		
+##	3、开发工具介绍		
   - 模拟器  编辑器  调试器：  三个至少要打开一个
 	-	编译按钮：  重新编译小程序
 	-	预览： （二维码，自动） 可以实时在手机上进行真机查看，自己扫自己的
@@ -161,7 +265,7 @@ timeoutId = setTimeout(() =>{
 	-	版本管理： 通过git管理代码
 	-	详情： 里面的本地设置很重要
 
-## 3、小程序初始化项目文件介绍
+## 4、小程序初始化项目文件介绍
   - 小程序的全局对象是微信
 	- 小程序开发文档简介  
 		-	页面的配置和语法找框架
@@ -177,37 +281,45 @@ timeoutId = setTimeout(() =>{
 ## 四、小程序常用语法
 ## 1、数据绑定和更新
 - [数据绑定](https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxml/)
+- 数据绑定 `{{}}`
+- 数据修改 `setData`
 ```html
-<View bindtap="layoutHandlerFn"  data-id="panrent">
-  数据绑定：{{msg}}
-  <view bindtap="handlerFn" data-id="child">按钮触发</view>
-  <!-- <view catchtap="handlerFn">按钮触发</view> -->
-</View>
+<view>
+  <!-- 测试页面 -->
+  <!-- 1、数据展示 {{}} -->
+  数据绑定:{{msg}}
+  <!-- 2、属性绑定 -->
+  <image src="{{imgSrc}}" alt=""/>
+  <button bindtap='handlerFn'>按钮</button>
+</view>
 <script>
 Page({
-
   /**
    * 页面的初始数据
    */
   data: {
-    msg:'测试数据'
+        msg:'测试数据',
+        imgSrc:'https://res.wx.qq.com/wxdoc/dist/assets/img/0.4cb08bb4.jpg'
   },
-
-  layoutHandlerFn(event){
-    console.log('父组件触发了',event)
-  },
-
-  handlerFn(event){
-    console.log('儿子组件触发按钮事件',event)
-    const value = event.currentTarget.dataset.id
-    this.setData({
-      msg: value
-    })
+  // 回调函数
+  handlerFn(){
+      // 通过 setData 修改数据  react 通过 this.setState
+      this.setData({
+          msg:'动态修改数据',
+          imgSrc:'https://img2.baidu.com/it/u=3531138711,1869416684&fm=253&fmt=auto&app=138&f=JPEG?w=400&h=410'
+      })
   }
  
 })
 </script>
 ```
+## 2、事件绑定
+  - [事件](https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxml/event.html#%E4%BA%8B%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F)
+	-	冒泡事件和非冒泡事件
+		-	冒泡事件(`bind`)：当一个组件上的事件被触发后，该事件会向父节点传递。
+		-	非冒泡事件(`catch`)：当一个组件上的事件被触发后，该事件不会向父节点传递。
+	-	`bindtap` 和 `catchtap` 点击事件
+
 ```html
 <!--pages/index/index.wxml-->
 <view class="container">
@@ -231,13 +343,6 @@ Page({
 })
 </script>
 ```
-## 2、事件绑定
-  - [事件](https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxml/event.html#%E4%BA%8B%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F)
-	-	冒泡事件和非冒泡事件
-		-	冒泡事件(`bind`)：当一个组件上的事件被触发后，该事件会向父节点传递。
-		-	非冒泡事件(`catch`)：当一个组件上的事件被触发后，该事件不会向父节点传递。
-	-	`bindtap` 和 `catchtap` 点击事件
-
 ## 3、授权获取用户基本信息
 -	[wx.getUserProfile](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/user-info/wx.getUserProfile.html)
 
@@ -265,7 +370,7 @@ Page({
 <button  wx:else class="nickName" size="mini" bindtap="getUserInfo">获取用户信息</button>
 ```
 ## 5、路由跳转
-- `wx.reLaunch`
+ - `wx.reLaunch`
 - `wx.redirectTo`
 -	`wx.navigateTo`
 - `wx.navigateBack`
@@ -283,7 +388,7 @@ toIndex(){
 ```js
 wx.reLaunch({
   url: 'test?id=1'
-})
+}) 
 
 ```
 ## 6、生命周期的钩子
@@ -299,7 +404,7 @@ wx.reLaunch({
   onLoad: function (options) {
 
   },
-
+ 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
