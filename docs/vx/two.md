@@ -12,8 +12,10 @@
  - 6、上线
 
 ## 2、项目初始化&&配置
- - 1、新建项目重新创建所有的文件
- - 2、新建项目配置文件配置顶部 app相关
+- 1、新建项目重新创建所有的文件
+- 2、新建项目配置文件配置顶部 app相关
+- 3、导入资源包
+- 4、删除默认的`app.wxss`样式
 ```js
 "pages":[
     "pages/index/index"
@@ -29,22 +31,24 @@
 - [swiper](https://developers.weixin.qq.com/miniprogram/dev/component/swiper.html)
 
 ```html
+<!--index.wxml-->
 <view class="container">
   <swiper class="bannerSwiper" 	indicator-dots 	indicator-active-color='red'>
     <swiper-item class="swiperItem">
       <image src="../../static/images/mylove.jpg"></image>
     </swiper-item>
-    <swiper-item>
+    <swiper-item  class="swiperItem">
       <image src="../../static/images/mylove.jpg"></image>
     </swiper-item>
-    <swiper-item>
+    <swiper-item  class="swiperItem">
       <image src="../../static/images/mylove.jpg"></image>
     </swiper-item>
   </swiper>
 </view>
+
 ```
 ```css
-page{`
+page{
   width: 100%;
 }
 .bannerSwiper{
@@ -55,11 +59,13 @@ page{`
   height: 300rpx;
 }
 .swiperItem image{
+  width: 100%;
   height: 300rpx;
 }
 ```
 
 ## 4、导航区域搭建
+- app.wxss 引入字体`@import './static/iconfont/iconfont.wxss'`
 ```html
   <view class="navList">
     <view class="navItem">
@@ -133,29 +139,6 @@ page{`
 	overflow: hidden; 
 ```
 
-```css
-.recommendScroll{
-  height: 300rpx;
-  display: flex;
-}
-.scrollItem{
-  width: 200rpx;
-  margin-right: 20rpx;
-}
-.scrollItem .scrollImg{
-  width: 200rpx;
-  height: 200rpx;
-  border-radius: 20rpx;
-}
-.scrollText{
-  display: block;
-	white-space: nowrap;    /*规定文本不换行**/
-	overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 28rpx;
-}
-```
-
 ```html
 <view class='recommend'>
 	<view class="header">
@@ -183,6 +166,47 @@ page{`
 	</scroll-view>
 </view>
 ```
+```css
+.recommend{
+  padding: 20rpx;
+}
+.recommend .header .title{
+  line-height: 70rpx;
+  color: #aaa;
+}
+.recommend .textRight{
+  float: right;
+  font-size: 28rpx;
+  border: 1px solid #aaa;
+  text-align: center;
+  line-height: 60rpx;
+  height: 60rpx;
+  width: 150rpx;
+  border-radius: 30rpx;
+}
+
+.recommendScroll{
+  height: 300rpx;
+  display: flex;
+}
+.scrollItem{
+  width: 200rpx;
+  margin-right: 20rpx;
+}
+.scrollItem .scrollImg{
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 20rpx;
+}
+.scrollText{
+  display: block;
+	white-space: nowrap;    /*规定文本不换行**/
+	overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 28rpx;
+}
+```
+
 
 ## 6、排行榜静态搭建
 ```html
@@ -289,8 +313,17 @@ page{`
 - 组件结构里面使用的是动态数据
 - 组件js里面可以接收传递的动态数据
 - 使用组件的地方可以通过属性传值
+- 在当前创建一个 components 文件 里面存放组件
+- 同时需要在index.json文件 进入
+```json
+"usingComponents": {
+  "HeaderNav":"/components/HeaderNav/HeaderNav"
+}
+```
 ```html
 <HeaderNav title='排行榜' text='热歌风向标' />
+<HeaderNav title='推荐歌曲' text='为你精心推荐' />
+
 
 <view class="header">
   <view class="title">{{title}}</view>
@@ -313,6 +346,24 @@ page{`
     }
   },
 </script>
+
+
+<style>
+.header .title{
+  line-height: 70rpx;
+  color: #aaa;
+}
+.textRight{
+  float: right;
+  font-size: 28rpx;
+  border: 1px solid #aaa;
+  text-align: center;
+  line-height: 60rpx;
+  height: 60rpx;
+  width: 150rpx;
+  border-radius: 30rpx;
+}
+</style>
 ```
        
 ## 8、封装发请求的功能函数（使用promise需要设置）
