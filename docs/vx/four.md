@@ -1,7 +1,7 @@
-# 硅谷云音乐
+# 谷粒云音乐
 [[toc]]
 
-## 第一节、列表视频 多个视频同时播放的问题
+## 1、列表视频 多个视频同时播放的问题
 - 当前保存一个 video 实例，每次播放的时候将上一个实例 停止，同时更换点击的实例，将当前点击的实例进行播放
 - 如何保证只有一个视频在播放  (利用单例模式)
 - 首先保证只有一个执行上下文对象(创建的视频实例),存到我们的this上
@@ -56,7 +56,7 @@ data: {
   },
 </script>
 ```
-## 第二节、图片做优化
+## 2、图片做优化
 - poster属性 封面
 - 图片和视频切换  保证了当前只能有一个视频展示
 ```html
@@ -92,7 +92,7 @@ data: {
 </style>
 ```
 
-## 第三节、内网演示
+## 3、内网演示
 - 优化地址配置
 ```js
 export default {
@@ -107,7 +107,7 @@ wx.request({
 }
 ```
 
-## 第四节、保存当前播放时间， 切换回来的时候 变成继续播放
+## 4、保存当前播放时间， 切换回来的时候 变成继续播放
 - `VideoContext.seek`
 ```js
 // 添加历史 播放记录
@@ -120,7 +120,7 @@ addHistoryRecord(){
 }
 ```
 
-## 第五节、播放完成删除历史记录
+## 5、播放完成删除历史记录
 - vedio 事件`bindended`
 ```js
 <video
@@ -138,7 +138,7 @@ handlerEnd(event){
 </script>
 ```
 
-## 第六节、上拉触底 下拉刷新
+## 6、上拉触底 下拉刷新
 - 下拉刷新 需要配置 `scroll-view` 的 `refresher-enabled` 为 `true` 和下拉刷新标识 `refresher-triggered` 为`false`
   - 当用户下拉刷新的时候，需要重新发请求获取列表数据 绑定事件`bindrefresherrefresh`
   - 用户下拉刷新的时候, 会出现标识(三个点), 当数据请求回来了, 需要取消标识(去掉三个点) 
@@ -192,7 +192,7 @@ async getVideoList(){
 </script>
 ```
 
-## 第七节、自定义原生分享和自定义分析
+## 7、自定义原生分享和自定义分析
 - 自定义按钮转发 `button`身上 `open-type = 'share'`
 - 自带菜单转发
 - 无论是按钮转发还是菜单转发 最终都会触发`onShareAppMessage`
@@ -296,7 +296,7 @@ onShareAppMessage({from}) {
     })
   },
 ```
-## 第八节、今日推荐页面布局
+## 8、今日推荐页面布局
 - 
 ```html
 <style>
@@ -411,7 +411,7 @@ onShareAppMessage({from}) {
   </view>
 </view>
 ```
-## 第九节、日期动态数据
+## 9、日期动态数据
 - `/recommend/songs`
 ```html
 <scroll-view class="songScroll" enable-flex scroll-y>
@@ -461,7 +461,7 @@ Page({
 })
 </script>
 ```
-## 第十节、播放歌曲
+## 10、播放歌曲
 
 ```html
 <style>
@@ -579,7 +579,7 @@ Page({
   </view>
 </view>
 ```
-## 第十一节、点击播放和暂停按钮，实现布局的动画
+## 11、点击播放和暂停按钮，实现布局的动画
 ```html
 <view class="songBar">
   <image class="needle {{isPlay&&'active'}}" src="../../static/images/song/needle.png"></image>

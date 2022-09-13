@@ -1,7 +1,7 @@
-# five
+# 谷粒云音乐
 [[toc]]
 
-## 初始化歌曲详情信息
+## 1、初始化歌曲详情信息
 - 路由传值
 - `wx.setNavigationBarTitle`修改导航头
 ```html
@@ -42,7 +42,7 @@ async getSongDetail(){
 }
 </script>
 ```
-## 获取歌曲的播放路径 创建背景音乐
+## 2、获取歌曲的播放路径 创建背景音乐
 - `wx.setNavigationBarTitle` 主要title和src 必填
 ```js
 async onLoad(options) {
@@ -70,7 +70,7 @@ async onLoad(options) {
 }
 ```
 
-## 处理暂停和播放
+## 3、处理暂停和播放
 ```js
 // 点击播放或者暂停按钮，切换播放状态
 handleMusicPlay(){
@@ -87,7 +87,7 @@ playOrPauseMusic(){
     isPlay?this.player.play():this.player.pause();
 }
 ```
-## 系统内置的播放
+## 4、系统内置的播放
 - 这里有系统内置的播放状态，  我们的按钮播放要与他同步
 - 利用 播放器的监听事件 `onPlay` 和 `onPause`
 ```js
@@ -126,13 +126,13 @@ async onLoad(options) {
   }
 ```
 
-## 利用 npm 包 进行通讯
+## 5、利用 npm 包 进行通讯
 -  npm在小程序当中使用
 -  初始化包  npm init
 -  npm i pubsub-js  
 -  每安装一个包都要去工具当中构建一次npm   让小程序可以找到
 
-## 上一曲下一曲逻辑， 消息的订阅和发布
+## 6、上一曲下一曲逻辑， 消息的订阅和发布
 -   
 ```js
 // recommend.js
@@ -181,7 +181,7 @@ handleSwitch(event){
 
 ```
 
-## 绑定歌曲自然播放结束
+## 7、绑定歌曲自然播放结束
 ```js
 // 绑定歌曲自然播放结束
 this.player.onEnded(()=>{
@@ -190,7 +190,7 @@ this.player.onEnded(()=>{
 })
 ```
 
-## 进度条布局
+## 8、进度条布局
 ```html
 <view class="progress">
     <text class="currentTime">{{startTime}}</text>
@@ -235,4 +235,4 @@ this.player.onEnded(()=>{
 </style>
 ```
 
-## 动态设置播放时间 和 进度条的宽度
+<!-- ## 9、动态设置播放时间 和 进度条的宽度 -->

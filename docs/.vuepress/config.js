@@ -50,35 +50,7 @@ module.exports = {
         children: [
           "five",
         ]
-      },
-      {
-        title: '第六天课',
-        collapsable: false,
-        children: [
-          "six",
-        ]
-      },
-      {
-        title: '第七天课',
-        collapsable: false,
-        children: [
-          "seven",
-        ]
-      },
-      {
-        title: '第八天课',
-        collapsable: false,
-        children: [
-          "eight",
-        ]
-      },
-      {
-        title: '第九天课',
-        collapsable: false,
-        children: [
-          "nine",
-        ]
-      },
+      }
     ],
     
     "/uniapp/": [

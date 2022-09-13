@@ -1,4 +1,4 @@
-# 硅谷云音乐
+# 谷粒云音乐
 
 [[toc]]
 
@@ -22,7 +22,7 @@
   ],
 "window":{
     "navigationBarBackgroundColor": "#ea2a1d",
-    "navigationBarTitleText": "硅谷云音乐",
+    "navigationBarTitleText": "谷粒云音乐",
     "navigationBarTextStyle":"white"
   }
 ```

@@ -1,8 +1,9 @@
-# 硅谷云音乐
+# 谷粒云音乐
 [[toc]]
 
 ## 1、tabbar
 - 新建video和center的page页面
+- 在 app.json  配置一个路由  会自动在对应的文件夹下生产文件目录
 
 ```js
 // app.json 
@@ -45,6 +46,8 @@
  >
 
 <script>
+  import request from '../../utils/request'
+  let startY = 0
   data: {
     translateY:'',
     transition:'',
@@ -85,12 +88,17 @@
 
 
 ## 3、登录 账号密码收集
--event.currentTarget 用户点击的目标元素
--event.target 拿到绑定事件的元素
+- 创建 login 页面(复制之前的代码)
+- event.currentTarget 用户点击的目标元素
+- event.target 拿到绑定事件的元素
 ```html
 <input type="text" id="phone" placeholder="请输入手机号码" bindinput="handlerInput" />
 <input type="password" id="password" placeholder="请输入密码" bindinput="handlerInput"/>
 <script>
+data: {
+  phone:'',
+  password:''
+},
 // 输入手机和密码，收集
   handlerInput(event){
     let type = event.currentTarget.id
@@ -170,8 +178,8 @@
     </view>
 </view>
 
-<view wx:else class="user-info-box">
-    <view class="portrait-box" bindtap="toLogin">
+<view wx:else class="user-info-box" bindtap="toLogin">
+    <view class="portrait-box">
     <image class="portrait" src='../../static/images/mylove.jpg'></image>
     </view>
     <view class="info-box">
@@ -197,6 +205,7 @@ onLoad: function (options) {
 ```
 
 ## 6、个人中心登录后的播放记录实现
+- scroll-view 要给一个 宽度或者 高度  
 ```html
 <scroll-view wx:if="{{userInfo.nickname}}" class="recordScroll" enable-flex scroll-x>
     <view wx:for="{{recentList}}" wx:key='id' class="item">
@@ -338,6 +347,8 @@ onLoad: function (options) {
 </view>
 
 <script>
+import request from '../../utils/request.js'
+
 data: {
     navList:[],
     navId:'',
@@ -365,6 +376,7 @@ onLoad(options) {
 
 ## 11、设置nav点击滚动到点击的这个项
 - `scroll-view`  `scroll-into-view scroll-with-animation`
+- `scroll-into-view` 对应当前 滑动的id
 ```html
 <scroll-view
     enable-flex 
@@ -373,6 +385,15 @@ onLoad(options) {
     scroll-into-view="{{'scroll' + navId}}"
     scroll-with-animation
   >
+  <view wx:for="{{navList}}"
+          wx:key="id"
+          class="videoContainer_nav_item  {{item.id === navId ? 'active' : ''}}"
+          bindtap="onChangeNav"
+          data-id="{{item.id}}"
+          id="{{'scroll' + item.id}}"
+    >
+      {{item.name}}
+    </view>
 </scroll-view>
 ```
 ## 12、处理cookies
@@ -385,7 +406,7 @@ export default function request(url, data, method='GET'){
       data,
       header:{
         // 让所有的请求携带cookie
-        cookie:wx.getStorageSync('cookie_key')&&wx.getStorageSync('cookie_key').find(item => item.startsWith('MUSIC'))
+        cookie:wx.getStorageSync('cookie_key')&&wx.getStorageSync('cookie_key').join(';')
       },
       success:(res)=>{
         if(data && data.isLogin){
