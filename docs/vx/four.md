@@ -1,11 +1,14 @@
 # 谷粒云音乐
 [[toc]]
 
-## 1、列表视频 多个视频同时播放的问题
-- 当前保存一个 video 实例，每次播放的时候将上一个实例 停止，同时更换点击的实例，将当前点击的实例进行播放
-- 如何保证只有一个视频在播放  (利用单例模式)
-- 首先保证只有一个执行上下文对象(创建的视频实例),存到我们的this上
-### 1、播放流程
+## 1、列表视频 多个视频同时播放的问题,要求只能同时只有一个视频播放
+- 1、[`wx.createVideoContext(id)`](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.createVideoContext.html) 
+  - VideoContext 实例，可通过 wx.createVideoContext 获取
+  - VideoContext 通过 id 跟一个 video 组件绑定，操作对应的 video 组件
+  - `VideoContext.pause()` 暂停
+  - `VideoContext.play()` 播放
+
+### 播放流程
 - 判断this身上是否存在上下文对象, 如果不存在 就代表第一次播放
   -  创建上下文对象
   -  播放开始
@@ -33,7 +36,7 @@ data: {
     const vid = event.currentTarget.id
     // 之前不存在 video 实例
     if(!this.player){
-      // 如何保证只有一个视频在播放  (利用单例模式)
+      // 如何保证只有一个视频在播放
       // 首先保证只有一个执行上下文对象(创建的视频实例),存到我们的this上
       this.player = wx.createVideoContext(vid)
       this.player.play()
@@ -57,8 +60,8 @@ data: {
 </script>
 ```
 ## 2、图片做优化
-- poster属性 封面
-- 图片和视频切换  保证了当前只能有一个视频展示
+- `video` 有一个属性 `poster` 可以设置封面
+- 图片和视频切换  保证了当前只能有一个视频展示, 通过当前点击和当前遍历id 是否是同一个
 ```html
  <view
   class="videoContainer_videoSroll_srcollItem"
@@ -108,20 +111,48 @@ wx.request({
 ```
 
 ## 4、保存当前播放时间， 切换回来的时候 变成继续播放
-- `VideoContext.seek`
+- `video` 组件回调事件 `bindtimeupdate`：播放进度变化时触发，event.detail = {currentTime, duration} 。触发频率 250ms 一次
+- `VideoContext.seek` 跳转到指定位置
+- 1、通过`bindtimeupdate`事件获取 当前video id和他播放的时间节点 保存起来
+- 2、在每次播放的时候  去历史记录查找，当前video id和历史的id 是否有匹配的,如果有就获取的他播放时间节点,通过`VideoContext.seek`跳转过去
+- 3、在接着走之前播放逻辑
 ```js
+data(){
+  playRecordList:[],
+},
+
+handleTimeUpdate(e){
+    const vid = e.currentTarget.id;
+    const playRecordList = this.data.playRecordList
+    const obj = playRecordList.find(i => i.id === vid);
+    if(obj){
+      // 存在
+      obj.currentTime = e.detail.currentTime
+    } else {
+      playRecordList.push({
+        id: vid,
+        currentTime:e.detail.currentTime
+      })
+      this.setData({
+        playRecordList
+      })
+    }
+  },
 // 添加历史 播放记录
-addHistoryRecord(){
-  let obj = this.data.playRecordList.find(item => item.vid ===this.data.vid)
+seekHistoryRecord(){
+  const obj = this.data.playRecordList.find(i => i.id === this.data.vId)
   if(obj){
-    // 如果查找到之前的播放记录，那么这次我需要跳转到位置
-    this.player.seek(obj.currentTime)
+    this.vedioThis.seek(obj.currentTime)
   }
 }
+
+// 在 play 之前添加跳转进度
+this.seekHistoryRecord();
+this.vedioThis.play()
 ```
 
 ## 5、播放完成删除历史记录
-- vedio 事件`bindended`
+- `video` 组件回调事件 `bindended`：当播放到末尾时触发 ended 事件
 ```js
 <video
   bindended="handlerEnd"
@@ -139,11 +170,11 @@ handlerEnd(event){
 ```
 
 ## 6、上拉触底 下拉刷新
-- 下拉刷新 需要配置 `scroll-view` 的 `refresher-enabled` 为 `true` 和下拉刷新标识 `refresher-triggered` 为`false`
-  - 当用户下拉刷新的时候，需要重新发请求获取列表数据 绑定事件`bindrefresherrefresh`
-  - 用户下拉刷新的时候, 会出现标识(三个点), 当数据请求回来了, 需要取消标识(去掉三个点) 
-    - 下拉刷新标识 `refresher-triggered`
-  - 上拉触底后，需要添加新的视列表数据，目前没有api，模拟手动添加数据，绑定`bindscrolltolower`
+- `scroll-view` 组件
+  -  下拉刷新: `refresher-enabled` 为 `true` 
+  -  下拉刷新标识 `refresher-triggered` 为`false`(三个点 给取消掉)
+  -  下拉刷新的回调事件`bindrefresherrefresh` 可以用来更新数据
+  -  上拉触底后，需要添加新的视列表数据，目前没有api，模拟手动添加数据，绑定`bindscrolltolower`
 
 ```html
 <scroll-view
@@ -178,9 +209,9 @@ handlerToLower(){
   }
 }
 async getVideoList(){
-  const rs = await request('/video/group',{id:this.data.navId})
-  if(rs.code === 200){
-    const videoList = rs.datas.map(item => item.data)
+  const rs = await request('/video/group',{id:this.data.currentId})
+      if(rs.code === 200){
+      const videoList = rs.datas.map(item => item.data)
     setTimeout(()=>{
       this.setData({
         refresherFlag: false,
@@ -188,7 +219,7 @@ async getVideoList(){
       })
     },2000)
   }
-}
+},
 </script>
 ```
 

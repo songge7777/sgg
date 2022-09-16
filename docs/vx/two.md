@@ -308,6 +308,7 @@ page{
 }
 ```
 ## 7、自定义组件
+- [文档](https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/)
 - 类似vue  
 - 创建组件
 - 组件结构里面使用的是动态数据
